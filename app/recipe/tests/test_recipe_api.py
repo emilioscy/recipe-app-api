@@ -76,7 +76,9 @@ class PrivateRecipeAPITests(TestCase):
     """Test authenticated api requests for Recipe."""
 
     def setUp(self):
-        self.user = create_user(email='test@example.com', password='password1234')
+        self.user = create_user(
+            email='test@example.com', password='password1234'
+        )
         self.client = APIClient()
         self.client.force_authenticate(self.user)
 
@@ -94,7 +96,8 @@ class PrivateRecipeAPITests(TestCase):
 
     def test_recipe_list_limited_to_user(self):
         """Test list of recipes limited to authenticatetd user."""
-        other_user = create_user(email='test2@example.com',
+        other_user = create_user(
+            email='test2@example.com',
             password='password1234'
         )
         create_recipe(user=other_user)
@@ -178,12 +181,15 @@ class PrivateRecipeAPITests(TestCase):
 
     def test_change_user_returns_error(self):
         """Test change recipe's user returns error."""
-        new_user = create_user(email='example2@gmail.com', password='password123')
+        new_user = create_user(
+            email='example2@gmail.com',
+            password='password123'
+        )
         recipe = create_recipe(user=self.user)
 
         payload = {'user': new_user.id}
         url = detail_url(recipe.id)
-        res = self.client.patch(url, payload)
+        self.client.patch(url, payload)
 
         recipe.refresh_from_db()
         self.assertEqual(recipe.user, self.user)
@@ -200,7 +206,10 @@ class PrivateRecipeAPITests(TestCase):
 
     def test_delete_other_users_recipe_error(self):
         """Test deleting other user's recipe gives error."""
-        other_user = create_user(email='example2@gmail.com', password='password1234')
+        other_user = create_user(
+            email='example2@gmail.com',
+            password='password1234'
+        )
         recipe = create_recipe(user=other_user)
 
         url = detail_url(recipe.id)
@@ -347,7 +356,10 @@ class PrivateRecipeAPITests(TestCase):
         res = self.client.patch(url, payload, format='json')
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        new_ingredient = Ingredient.objects.get(user=self.user, name='Ingredient1')
+        new_ingredient = Ingredient.objects.get(
+            user=self.user,
+            name='Ingredient1'
+        )
         self.assertIn(new_ingredient, recipe.ingredients.all())
 
     def test_update_recipe_assign_ingredient(self):
@@ -426,7 +438,10 @@ class ImageUploadTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.user = create_user(email='test@example.com', password='password1234')
+        self.user = create_user(
+            email='test@example.com',
+            password='password1234'
+        )
         self.client.force_authenticate(self.user)
         self.recipe = create_recipe(user=self.user)
 
@@ -455,5 +470,3 @@ class ImageUploadTests(TestCase):
         res = self.client.post(url, payload, format='multipart')
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-
-

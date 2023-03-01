@@ -79,7 +79,9 @@ class PrivateIngredientsAPITests(TestCase):
 
     def test_update_ingredient(self):
         """Test updating ingredient."""
-        ingredient = Ingredient.objects.create(user=self.user, name='Ingredient1')
+        ingredient = Ingredient.objects.create(
+            user=self.user, name='Ingredient1'
+        )
 
         payload = {'name': 'Ingredient new name'}
         url = detail_url(ingredient_id=ingredient.id)
@@ -91,7 +93,9 @@ class PrivateIngredientsAPITests(TestCase):
 
     def test_delete_ingredient(self):
         """test deleting an ingredient."""
-        ingredient = Ingredient.objects.create(user=self.user, name='Ingredient1')
+        ingredient = Ingredient.objects.create(
+            user=self.user, name='Ingredient1'
+        )
 
         url = detail_url(ingredient_id=ingredient.id)
         res = self.client.delete(url)
@@ -143,4 +147,3 @@ class PrivateIngredientsAPITests(TestCase):
         res = self.client.get(INGREDIENTS_URL, params)
 
         self.assertEqual(len(res.data), 1)
-
